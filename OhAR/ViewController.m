@@ -8,6 +8,11 @@
 
 #import "ViewController.h"
 
+typedef enum : NSUInteger {
+    EarthRotateDirectionLeft,
+    EarthRotateDirectionRight
+} EarthRotateDirection;
+
 @interface ViewController () <ARSCNViewDelegate>
 
 @property (nonatomic, strong) IBOutlet ARSCNView *sceneView;
@@ -33,15 +38,26 @@
     self.earthNode = [[scene rootNode] childNodeWithName:@"earth" recursively:YES];
     [self.earthNode setPosition:SCNVector3Make(0, 0, -1)];
     
-    SCNAction *rAction = [SCNAction rotateByAngle:M_PI_2 aroundAxis:SCNVector3Make(0, 1.0, 0) duration:1];
-    SCNAction *kAction = [SCNAction repeatActionForever:rAction];
-    [self.earthNode runAction:kAction];
-    
     // Set the scene to the view
     self.sceneView.scene = scene;
     
-    UISwipeGestureRecognizer *swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipped:)];
-    [self.sceneView addGestureRecognizer:swipeRecognizer];
+    // 处理拖动
+    UIPanGestureRecognizer *panRecoginzer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panned:)];
+    [panRecoginzer setMaximumNumberOfTouches:2];
+    [panRecoginzer setMinimumNumberOfTouches:2];
+    [self.sceneView addGestureRecognizer:panRecoginzer];
+    // 处理左滑
+    UISwipeGestureRecognizer *swipeLeftRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipped:)];
+    [swipeLeftRecognizer setDirection:UISwipeGestureRecognizerDirectionLeft];
+    [self.sceneView addGestureRecognizer:swipeLeftRecognizer];
+    // 处理右滑
+    UISwipeGestureRecognizer *swipeRightRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipped:)];
+    [swipeRightRecognizer setDirection:UISwipeGestureRecognizerDirectionRight];
+    [self.sceneView addGestureRecognizer:swipeRightRecognizer];
+    
+    // 处理长按
+    UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressed:)];
+    [self.sceneView addGestureRecognizer:longPressRecognizer];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -95,10 +111,41 @@
     
 }
 
-# pragma mark - touches
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+#pragma mark - actions
+
+- (void)rotateEarthBallWithDirection:(EarthRotateDirection)direction
 {
-    CGPoint location = [[touches anyObject] locationInView:self.sceneView];
+    CGFloat rotateAngle = M_PI * 6;
+    if (direction == EarthRotateDirectionLeft)
+    {
+        rotateAngle = - rotateAngle;
+    }
+    
+    SCNAction *rAction = [SCNAction rotateByAngle:rotateAngle aroundAxis:SCNVector3Make(0, 1.0, 0) duration:3.0];
+    [rAction setTimingMode:SCNActionTimingModeEaseOut];
+    [self.earthNode runAction:rAction];
+}
+
+# pragma mark - touches
+
+- (void)swipped:(UISwipeGestureRecognizer *)recognizer
+{
+    CGPoint location = [recognizer locationInView:self.sceneView];
+    NSArray<SCNHitTestResult *> *results = [self.sceneView hitTest:location options:nil];
+    if (results && [results count] > 0)
+    {
+        SCNHitTestResult *result = results.firstObject;
+        
+        if ([result node] == self.earthNode)
+        {
+            [self rotateEarthBallWithDirection: (recognizer.direction == UISwipeGestureRecognizerDirectionLeft ? EarthRotateDirectionLeft : EarthRotateDirectionRight)];
+        }
+    }
+}
+
+- (void)longPressed:(UILongPressGestureRecognizer *)recognizer
+{
+    CGPoint location = [recognizer locationInView:self.sceneView];
     NSArray<ARHitTestResult *> * results = [self.sceneView hitTest:location types:ARHitTestResultTypeFeaturePoint];
     
     if (results && [results count] > 0)
@@ -111,16 +158,13 @@
     }
 }
 
-- (void)swipped:(UISwipeGestureRecognizer *)recognizer
+- (void)panned:(UIPanGestureRecognizer *)recognizer
 {
-    NSLog(@"🚩xxx--- %@ ---xxx🦋", @"swipped");
-    if (recognizer.direction == UISwipeGestureRecognizerDirectionUp || recognizer.direction == UISwipeGestureRecognizerDirectionDown)
-    {
-        return ;
-    }
-    
-    
-    
+    static CGFloat prevTranslatedX = 0.0;
+    CGPoint translatedPoint = [recognizer translationInView:self.sceneView];
+    [self.earthNode setRotation:SCNVector4Make(0, 1, 0, self.earthNode.rotation.w + (translatedPoint.x - prevTranslatedX) / 12.0)];
+    prevTranslatedX = translatedPoint.x;
 }
+
 
 @end
