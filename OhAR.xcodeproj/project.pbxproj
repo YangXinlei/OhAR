@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		505F98611F0F7342007EDA03 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 505F985F1F0F7342007EDA03 /* spark.png */; };
+		50D12F541F0F7AB9009768A7 /* shipReactor.scnp in Resources */ = {isa = PBXBuildFile; fileRef = 50D12F531F0F7AB9009768A7 /* shipReactor.scnp */; };
 		50E537D81F0E266E00945D47 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 50E537D71F0E266E00945D47 /* AppDelegate.m */; };
 		50E537DA1F0E266E00945D47 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 50E537D91F0E266E00945D47 /* art.scnassets */; };
 		50E537DD1F0E266E00945D47 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50E537DC1F0E266E00945D47 /* ViewController.m */; };
@@ -17,6 +19,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		505F985F1F0F7342007EDA03 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
+		50D12F531F0F7AB9009768A7 /* shipReactor.scnp */ = {isa = PBXFileReference; lastKnownFileType = file.scp; path = shipReactor.scnp; sourceTree = "<group>"; };
 		50E537D31F0E266D00945D47 /* OhAR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OhAR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		50E537D61F0E266E00945D47 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		50E537D71F0E266E00945D47 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -70,6 +74,8 @@
 				50E537E31F0E266E00945D47 /* LaunchScreen.storyboard */,
 				50E537E61F0E266E00945D47 /* Info.plist */,
 				50E537E71F0E266E00945D47 /* main.m */,
+				505F985F1F0F7342007EDA03 /* spark.png */,
+				50D12F531F0F7AB9009768A7 /* shipReactor.scnp */,
 			);
 			path = OhAR;
 			sourceTree = "<group>";
@@ -131,7 +137,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50D12F541F0F7AB9009768A7 /* shipReactor.scnp in Resources */,
 				50E537DA1F0E266E00945D47 /* art.scnassets in Resources */,
+				505F98611F0F7342007EDA03 /* spark.png in Resources */,
 				50E537E51F0E266E00945D47 /* LaunchScreen.storyboard in Resources */,
 				50E537E21F0E266E00945D47 /* Assets.xcassets in Resources */,
 				50E537E01F0E266E00945D47 /* Main.storyboard in Resources */,
@@ -318,6 +326,7 @@
 				50E537ED1F0E266E00945D47 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
