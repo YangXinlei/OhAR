@@ -162,6 +162,11 @@ typedef enum : NSUInteger {
 {
     static CGFloat prevTranslatedX = 0.0;
     CGPoint translatedPoint = [recognizer translationInView:self.sceneView];
+    if ([recognizer state] == UIGestureRecognizerStateBegan)
+    {
+        prevTranslatedX = translatedPoint.x;
+    }
+    
     [self.earthNode setRotation:SCNVector4Make(0, 1, 0, self.earthNode.rotation.w + (translatedPoint.x - prevTranslatedX) / 12.0)];
     prevTranslatedX = translatedPoint.x;
 }
